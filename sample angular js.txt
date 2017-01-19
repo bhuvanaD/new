@@ -1,0 +1,65 @@
+<html>
+  
+ 
+   <head> 
+
+       <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js">
+   
+
+    
+   </script>
+ 
+   
+   
+   </head>
+   
+ 
+
+     <body ng-app = "firstapp">
+   
+
+
+ 
+     <div ng-controller = "Hai" >
+ 
+ 
+   
+      <h2> {{tit.title}} </h2> 
+ 
+  
+   
+      </div>
+   
+
+   
+      <script>
+  
+        
+  
+        angular.module("firstapp", [])
+ 
+   
+  
+         .controller("Hai" ,function($scope)
+  
+
+        {
+                 $scope.tit = {};
+  
+  
+                         $scope.tit.title ="welcoe";
+         
+     
+    });
+  
+        
+          
+          
+ 
+      </script>
+  
+   
+ 
+     </body>
+
+</html>
