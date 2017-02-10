@@ -1,0 +1,81 @@
+
+
+  <ion-view  view-title="Fil d'actualité">
+  <ion-content overflow-scroll="false" class="has-header has-footer">
+    <ion-list>
+      <div ng-repeat="group in groups track by $index">
+        <ion-item class="item-stable" ng-click="toggleGroup(group)" ng-class="{active: isGroupShown(group)}">
+          <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i> &nbsp; {{group.name}} 
+        </ion-item>   
+        <ion-item class="item-accordion" ng-show="isGroupShown(group)">{{group.description}}</ion-item>
+      </div>           
+    </ion-list>
+    <ion-infinite-scroll ng-if="(currentPage + 1) <= lastPage" on-infinite="loadMore()" distance="1%"></ion-infinite-scroll>
+  </ion-content>
+ <!--  <div ng-include src="'templates/tabs.html'"></div> -->
+</ion-view>
+
+<!-- <ion-list ng-controller="ResourceIndexCtrl">
+        <ion-item class="item item-avatar my-item"
+           collection-repeat="resource in resources"
+           collection-item-width="'100%'"
+           collection-item-height="70"
+           ng-href="#/tab/articles/{{resource.id}}">
+            <img ng-src="{{resource.image_url}}" alt="{{resource.name}}">
+
+            <h2 class="list-name">{{resource.title}}</h2>
+
+            <p>
+                {{resource.published_at}} - {{resource.category_name}}
+            </p>
+        </ion-item>
+
+    </ion-list>
+   
+
+</ion-content> -->
+
+
+ .controller('Feed', function($rootScope, $window, $state, $scope, $q, LoaderService, $ionicModal, $timeout, $stateParams, $http, $ionicPopup, $ionicHistory, $stateParams, $timeout, apiUrl){  
+  
+  $scope.groups = [];
+  $scope.currentPage = 1;
+  $scope.lastPage = 1;
+  $scope.loadMore =  function(){
+    var page = ($scope.currentPage + 1);
+    if(page <= $scope.lastPage){
+      $http.get(apiUrl + "/api/v1/feeds?page=" + page, { headers: { 'Content-Type': "application/json", }, }).success(function(res){
+        $scope.currentPage = res.currentPage;
+        $scope.lastPage = res.lastPage;
+                                                     angular.forEach(res.feeds, function(value, key){ $scope.groups.push(value); });
+      
+        if(!$scope.$$phase){ $scope.$apply(); }
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+      }).error(function(res)
+      {
+
+      });
+    }else{ $scope.$broadcast('scroll.infiniteScrollComplete'); }
+  };
+  $scope.toggleGroup = function(group){
+    if($scope.isGroupShown(group)){
+      $scope.shownGroup = null;
+    }else{
+      $scope.shownGroup = group;
+    }
+  };
+  $scope.isGroupShown = function(group){
+    return $scope.shownGroup === group;
+  };
+
+  $http.get(apiUrl + "/api/v1/feeds").success(function(res){
+       $scope.groups = res.feeds;
+       $scope.currentPage = res.currentPage;
+        $scope.lastPage = res.lastPage;
+  }).error(function(res){
+  
+          });
+
+     
+  
+ })

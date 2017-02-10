@@ -1,0 +1,165 @@
+angular.module('DoinSport.services', [
+	'ionic',
+	'ngCordova',
+])
+// 
+.filter('capitalize', function(){
+	return function(input){
+		return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+	}
+})
+// 
+.factory('PubNubService', function(Pubnub, pubnubPublish, pubnubSubscribe){
+	var defaultInstance = new PubNub({ publishKey: pubnubPublish, subscribeKey: pubnubSubscribe, });
+	return defaultInstance;
+})
+// 
+.factory('CookieService', function(){
+	return {
+		delete: function(name){ document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'; },
+	};
+})
+// 
+.factory('LoaderService', function($ionicLoading){
+	return {
+		Show: function(){ $ionicLoading.show({ template: '<ion-spinner icon="spiral"></ion-spinner>', }); },
+		Hide: function(){ $ionicLoading.hide(); },
+	};
+})
+// Location Service
+.factory('LocationService', function($http){
+	return {
+		getLocation: function(apiUrl, apiToken){
+			return $http.get(apiUrl + "/api/v1/location?api_token=" + apiToken);
+		},
+		postLocation: function(apiUrl, apiToken, data){
+			return $http.post(apiUrl + "/api/v1/location?api_token=" + apiToken, data, { headers: { 'Content-Type': "application/json", }, });
+		},
+	};
+})
+// 
+.directive("same", function(){
+	return {
+		require: "ngModel",
+		scope: {
+			otherModelValue: "=same"
+		},
+		link: function(scope, element, attributes, ngModel){
+			ngModel.$validators.same = function(modelValue){
+				return modelValue == scope.otherModelValue;
+			};
+			scope.$watch("otherModelValue", function(){
+				ngModel.$validate();
+			});
+		},
+	};
+})
+// Match Service
+.factory('MatchService', function($http){
+	return {
+		getMacths: function(apiUrl, apiToken){
+			return $http.get(apiUrl + "/api/v1/match?api_token=" + apiToken, { headers: { 'Content-Type': "application/json", }, });
+		},
+		getPostMacths: function(apiUrl, apiToken){
+			return $http.get(apiUrl + "/api/v1/match/post?api_token=" + apiToken, { headers: { 'Content-Type': "application/json", }, });
+		},
+		getRejoinMacths: function(apiUrl, apiToken){
+			return $http.get(apiUrl + "/api/v1/match/rejoin?api_token=" + apiToken, { headers: { 'Content-Type': "application/json", }, });
+		},
+		getCreateMacth: function(apiUrl, apiToken){
+			return $http.get(apiUrl + "/api/v1/match/create?api_token=" + apiToken, { headers: { 'Content-Type': "application/json", }, });
+		},
+		postCreateMacth: function(apiUrl, apiToken, data){
+			return $http.post(apiUrl + "/api/v1/match/create?api_token=" + apiToken, data, { headers: { 'Content-Type': "application/json", }, });
+		},
+		getMacthData: function(apiUrl, apiToken, id){
+			return $http.get(apiUrl + "/api/v1/match/edit/" + id + "?api_token=" + apiToken, { headers: { 'Content-Type': "application/json", }, });
+		},
+		getJoinMacthData: function(apiUrl, apiToken, id){
+			return $http.get(apiUrl + "/api/v1/match/join/" + id + "?api_token=" + apiToken, { headers: { 'Content-Type': "application/json", }, });
+		},
+		getMacthSlots: function(apiUrl, apiToken, id){
+			return $http.get(apiUrl + "/api/v1/match/slots/" + id + "?api_token=" + apiToken, { headers: { 'Content-Type': "application/json", }, });
+		},
+		getRejoinSlots: function(apiUrl, apiToken, id){
+			return $http.get(apiUrl + "/api/v1/match/rejoin-slots/" + id + "?api_token=" + apiToken, { headers: { 'Content-Type': "application/json", }, });
+		},
+		getMacthChatData: function(apiUrl, apiToken, id){
+			return $http.get(apiUrl + "/api/v1/match/chat-data/" + id + "?api_token=" + apiToken, { headers: { 'Content-Type': "application/json", }, });
+		},
+		postMacthJoin: function(apiUrl, apiToken, id){
+			return $http.post(apiUrl + "/api/v1/match/join/" + id + "?api_token=" + apiToken, { headers: { 'Content-Type': "application/json", }, });
+		},
+		postMacthJoinSide: function(apiUrl, apiToken, id){
+			return $http.post(apiUrl + "/api/v1/match/join-side/" + id + "?api_token=" + apiToken, { headers: { 'Content-Type': "application/json", }, });
+		},
+		getSportMacths: function(apiUrl, apiToken, sportId){
+			return $http.get(apiUrl + "/api/v1/match/sport/" + sportId + "?api_token=" + apiToken, { headers: { 'Content-Type': "application/json", }, });
+		},
+	};
+})
+// 
+.directive('ionInfiniteScrollFixed', function($timeout){
+	var calculateMaxValue = function(distance, maximum, isPercent){
+		return isPercent ? maximum * (1 - parseFloat(distance,10) / 100) : maximum - parseFloat(distance, 10); 
+	};
+	return {
+		restrict: 'E',
+		require: ['^$ionicScroll', 'ionInfiniteScrollFixed'],
+		template: '<i class="icon {{icon()}} icon-refreshing"></i>',
+		scope: true,
+		controller: function($scope, $attrs){
+			this.isLoading = false;
+			this.scrollView = null; //given by link function
+			this.getMaxScroll = function(){
+				var distance = ($attrs.distance || '2.5%').trim();
+				var isPercent = distance.indexOf('%') !== -1;
+				var maxValues = this.scrollView.getScrollMax();
+				return {
+					left: this.scrollView.options.scrollingX ? calculateMaxValue(distance, maxValues.left, isPercent) : -1,
+					top: this.scrollView.options.scrollingY ? calculateMaxValue(distance, maxValues.top, isPercent) : -1,
+				};
+			};
+		},
+		link: function($scope, $element, $attrs, ctrls){
+			var scrollCtrl = ctrls[0];
+			var infiniteScrollCtrl = ctrls[1];
+			var scrollView = infiniteScrollCtrl.scrollView = scrollCtrl.scrollView;
+			$scope.icon = function(){
+				return angular.isDefined($attrs.icon) ? $attrs.icon : 'ion-loading-d';
+			};
+			var onInfinite = function(){
+				$element[0].classList.add('active');
+				infiniteScrollCtrl.isLoading = true;
+				$scope.$parent && $scope.$parent.$apply($attrs.onInfinite || '');
+			};
+			var finishInfiniteScroll = function(){
+				$element[0].classList.remove('active');
+				$timeout(function(){
+					scrollView.resize();
+					checkBounds();
+				}, 0, false);
+				infiniteScrollCtrl.isLoading = false;
+			};
+			$scope.$on('scroll.infiniteScrollComplete', function(){
+				finishInfiniteScroll();
+			});
+			$scope.$on('$destroy', function(){
+				void 0;
+				if(scrollCtrl && scrollCtrl.$element)scrollCtrl.$element.off('scroll', checkBounds);
+			});
+			var checkBounds = ionic.animationFrameThrottle(checkInfiniteBounds);
+			//Check bounds on start, after scrollView is fully rendered
+			setTimeout(checkBounds);
+			scrollCtrl.$element.on('scroll', checkBounds);
+			function checkInfiniteBounds(){
+				if(infiniteScrollCtrl.isLoading) return;
+				var scrollValues = scrollView.getValues();
+				var maxScroll = infiniteScrollCtrl.getMaxScroll();
+				if((maxScroll.left !== -1 && scrollValues.left >= maxScroll.left && $attrs.notOnHorizontal !=="true") || (maxScroll.top !== -1 && scrollValues.top >= maxScroll.top && $attrs.notOnVertical !=="true")){
+					onInfinite();
+				}
+			}
+		}
+	};
+});

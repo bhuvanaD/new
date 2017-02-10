@@ -1,0 +1,97 @@
+
+.controller('MyCamera', function($scope,$cordovaCamera,$cordovaFileTransfer){
+
+	$scope.takePicture=function(){
+
+		  var options = {
+		      quality: 50,
+		      destinationType: Camera.DestinationType.DATA_URL,
+		      sourceType: Camera.PictureSourceType.CAMERA,
+		      allowEdit: true,
+		      encodingType: Camera.EncodingType.JPEG,
+		      targetWidth: 300,
+                               targetHeight: 300,
+		      popoverOptions: CameraPopoverOptions,
+		      saveToPhotoAlbum: false,
+	                  correctOrientation:true
+		    };
+
+		    $cordovaCamera.getPicture(options).then(function(data) {
+
+		      console.log('camera ur: '+ angular.toJson(data));
+
+		      $scope.picture= "data:image/jpeg;base64," + data;
+
+		    }, function(err) {
+		      // error
+		    });
+    };
+
+
+    
+
+
+
+		 
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$scope.testFileUpload = function () {
+    	
+     // Destination URL 
+     var url = "http://spacecute-test.ideliver.top/laravelapi/public/api/v1/models";
+      
+     //File for Upload
+     var targetPath = cordova.file.externalRootDirectory + "logo_radni.png";
+      
+     // File name only
+     var filename = targetPath.split("/").pop();
+      
+     var options = {
+          fileKey: "file",
+          fileName: filename,
+          chunkedMode: false,
+          mimeType: "image/jpg",
+          params : {'directory':'upload', 'fileName':filename}
+      };
+           
+      $cordovaFileTransfer.upload(url, targetPath, options).then(function (result) {
+          console.log("SUCCESS: " + JSON.stringify(result.response));
+      }, function (err) {
+          console.log("ERROR: " + JSON.stringify(err));
+      }, function (progress) {
+          // PROGRESS HANDLING GOES HERE
+      });
+  }

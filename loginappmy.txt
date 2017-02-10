@@ -1,0 +1,472 @@
+// Ionic DoinSport App
+
+// angular.module is a global place for creating, registering and retrieving Angular modules
+// 'DoinSport' is the name of this angular module example (also set in a <body> attribute in index.html)
+// the 2nd parameter is an array of 'requires'
+// 'DoinSport.services' is found in services.js
+// 'DoinSport.controllers' is found in controllers.js
+angular.module('DoinSport', [
+	'ionic',
+	'ngCordova',
+	'DoinSport.controllers',
+	'DoinSport.services',
+	'ngCordovaOauth',
+	'ionic-datepicker',
+	'ionic-timepicker',
+	'ionic-ratings',
+	'pubnub.angular.service',
+	'ion-floating-menu',
+	'ion-google-place',
+	'ionic-modal-select',
+])
+.constant('facebookApi', "1191943207511500") // developerinfo21@gmail.com
+.constant('googleApi', "339857312163-tbndlprevp9e4ok3frl10strjltf0s4n.apps.googleusercontent.com") // developerinfo32@gmail.com
+.constant('googleAnalytics', "UA-90117733-1") // developerinfo21@gmail.com
+.constant('pubnubPublish', "pub-c-0a13f0d6-b04d-43fa-8caa-80d57746ae42")
+.constant('pubnubSubscribe', "sub-c-7c8f899a-cdc4-11e6-b8a7-0619f8945a4f")
+.constant('pubnubSecret', "sec-c-MTE2YTA0OGQtMjgxZS00ZjAzLTkxMGEtOWRlYjAwZGE0ODM4")
+// .constant('apiUrl', 'http://localhost/laravelapi/public')
+.constant('apiUrl', 'http://spacecute-test.ideliver.top/laravelapi/public')
+.run(function($rootScope, $ionicPlatform, $ionicPopup, $ionicHistory, $window, $cordovaGoogleAnalytics, LoaderService, $ionicSideMenuDelegate, $timeout, googleAnalytics){
+	$ionicPlatform.ready(function(){
+		if(window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard){
+			cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+			cordova.plugins.Keyboard.disableScroll(true);
+		}; // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard for form inputs)
+		if(window.StatusBar){ StatusBar.styleDefault(); } // org.apache.cordova.statusbar required
+		if(window.cordova){
+		 	var enableLocation = function(){
+		 		cordova.plugins.diagnostic.isLocationEnabled(function(enabled){
+		 			if(enabled){
+			 			if(ionic.Platform.isIOS()){
+							cordova.plugins.diagnostic.requestLocationAuthorization(function(status){
+								switch(status){
+									case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
+										console.log("Permission not requested");
+										break;
+									case cordova.plugins.diagnostic.permissionStatus.DENIED:
+										console.log("Permission denied");
+										break;
+									case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+										console.log("Location use is authorized");
+										break;
+									case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
+										console.log("Location use is authorized only when in use");
+										break;
+								}
+							}, function(error){
+								console.error(error);
+							}, cordova.plugins.diagnostic.locationAuthorizationMode.ALWAYS);
+						}else{
+							cordova.plugins.diagnostic.requestLocationAuthorization(function(status){
+								switch(status){
+									case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
+										console.log("Permission not requested");
+										break;
+									case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+										console.log("Location use is authorized");
+										break;
+									case cordova.plugins.diagnostic.permissionStatus.DENIED:
+										console.log("Permission denied");
+										break;
+									case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
+										console.log("Permission permanently denied");
+										break;
+								}
+							}, function(error){
+								console.error(error);
+							});
+						}
+					}else{
+						$ionicPopup.alert({ title: "Please enable Location on your device", });
+						// cordova.plugins.diagnostic.switchToLocationSettings();
+					}
+				}, function(error){
+		 			console.error("The following error occurred: "+error);
+		 		});
+			};
+			var enableContact = function(){
+				cordova.plugins.diagnostic.requestContactsAuthorization(function(status){
+					if(status === cordova.plugins.diagnostic.permissionStatus.GRANTED){
+						console.log("Contacts use is authorized");
+					}
+					enableLocation();
+				}, function(error){
+					console.error(error);
+				});
+			};
+			enableContact();
+		};
+		window.addEventListener('native.keyboardshow', function(){ document.body.classList.add('keyboard-open'); });
+		$rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+			var states = [
+				'app.matchView',
+				'app.matchChat',
+				'app.matchMap',
+				'app.matchSlot',
+				'app.matchRejoin',
+				'app.matchRejoinSlot',
+				'app.chatFriend',
+			];
+			$rootScope.isBack = (states.indexOf(toState.name) >= 0);
+			$rootScope.isMenu = !(states.indexOf(toState.name) >= 0);
+			$ionicSideMenuDelegate.toggleLeft(false);
+		});
+		if(window.analytics){ $cordovaGoogleAnalytics.startTrackerWithId(googleAnalytics); };
+	});
+})
+.config(function($stateProvider, $urlRouterProvider){
+	// Ionic uses AngularUI Router which uses the concept of states
+	// Learn more here: https://github.com/angular-ui/ui-router
+	// Set up the various states which the app can be in.
+	// Each state's controller can be found in controllers.js
+	$stateProvider
+	// Landing Page
+	.state('land', {
+		cache: false,
+		url: "/",
+		templateUrl: "templates/land.html",
+		controller:"Land",
+	})
+	.state('showAuth', {
+		cache: false,
+		url: "/show",
+		templateUrl: "templates/showAuth.html",
+		controller:"ShowAuth",
+	})
+	// Create Account / Signup
+	.state('register', {
+		cache: false,
+		url: "/register",
+		templateUrl: "templates/register.html",
+		controller:"Register",
+	})
+	// Login
+	/*.state('login', {
+		cache: false,
+		url: "/login",
+		templateUrl: "templates/login.html",
+		controller:"Login",
+	})*/
+	.state('forgot', {
+		cache: false,
+		url: "/forgot",
+		templateUrl: "templates/forgot.html",
+		controller:"Forgot",
+	})
+	.state('reset', {
+		cache: false,
+		url: "/reset",
+		templateUrl: "templates/reset.html",
+		controller:"ResetPwd",
+		params: { email: null, },
+	})
+	
+	// Propos
+	.state('propos', {
+		url: '/propos',
+		abstract: true,
+		templateUrl: 'templates/menu.html',
+		controller: 'ProposCtrl',
+	})
+	.state('propos.home', {
+		url: 'propos/home',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/propos.html',
+				controller: 'Propos',
+			},
+		},
+	})
+	// Home
+	.state('app', {
+		url: '/app',
+		abstract: true,
+		templateUrl: 'templates/menu.html',
+		controller: 'AppCtrl',
+	})
+
+	.state('app.home', {
+		url: 'app/home',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/home.html',
+				controller: 'Home',
+				resolve: {
+					resource: function(apiUrl, $window, $http, LoaderService){
+						LoaderService.Show();
+						var apiToken = $window.localStorage.getItem("api_token");
+						return $http.get(apiUrl + "/api/v1?api_token=" + apiToken, { headers: { 'Content-Type': "application/json", }, }).then(function(res){
+							return res;
+						}, function(err){
+							return err;
+						});
+					},
+				},
+			},
+		},
+	})
+
+	.state('app.profile', {
+		url: 'app/profile',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/profile.html',
+				controller: 'Profile',
+			},
+		},
+	})
+
+	.state('app.notifications', {
+		url: 'app/notifications',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/notifications.html',
+				controller: 'Notification',
+			},
+		},
+	})
+
+	.state('app.createMatch', {
+		url: 'app/creatematch',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/createMatch.html',
+				controller: 'CreateMatch',
+				resolve: {
+					resource: function(apiUrl, $window, $http, LoaderService, MatchService){
+						LoaderService.Show();
+						var apiToken = $window.localStorage.getItem("api_token");
+						return MatchService.getCreateMacth(apiUrl, apiToken).then(function(res){
+							return res;
+						}, function(err){
+							return err;
+						});
+					},
+					fbContacts: function($http, $cordovaFacebook){
+						// var scopes = ['public_profile', 'email', 'user_friends', 'publish_actions', ];
+						var scopes = ['public_profile', 'email', 'user_friends', ];
+						if(window.cordova && window.cordova.plugins){
+							return $cordovaFacebook.getLoginStatus().then(function(success){
+								if(success.status == "connected"){
+									return $cordovaFacebook.api("me/friends?limit=1000", scopes).then(function(res){
+										res.success = true;
+										return res;
+									}, function(err){
+										err.error = true;
+										return err;
+									});
+								}else{
+									return $cordovaFacebook.login(scopes).then(function(success){
+										return $cordovaFacebook.api("me/friends?limit=1000", scopes).then(function(res){
+											res.success = true;
+											return res;
+										}, function(err){
+											err.error = true;
+											return err;
+										});
+									}, function(err){
+										err.error = true;
+										return err;
+									});
+								}
+							}, function(err){
+								err.error = true;
+								return err;
+							});
+						}else{ return {}; };
+					},
+				},
+			},
+		},
+	})
+	
+	.state('app.matchs', {
+		url: 'app/matchs',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/matchs.html',
+				controller: 'Matchs',
+			},
+		},
+	})
+
+	.state('app.postMatch', {
+		url: 'app/postmatchs',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/postMatch.html',
+				controller: 'PostMatch',
+			},
+		},
+	})
+
+	.state('app.rejoin', {
+		url: 'app/rejoin',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/rejoin.html',
+				controller: 'Rejoin',
+			},
+		},
+	})
+
+	.state('app.matchRejoin', {
+		url: 'app/rejoinmatch/:matchId',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/challengelist.html',
+				controller: 'MatchRejoin',
+			},
+		},
+	})
+	
+	.state('app.matchRejoinSlot', {
+		url: 'app/matchrejoinslot/:matchId',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/matchslot.html',
+				controller: 'MatchRejoinSlot',
+			},
+		},
+	})
+
+	.state('app.matchView', {
+		url: 'app/match/:matchId',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/challengelist.html',
+				controller: 'MatchView',
+			},
+		},
+	})
+
+	.state('app.matchMap', {
+		url: 'app/matchmap/:matchId',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/matchmap.html',
+				controller: 'MatchMap',
+			},
+		},
+	})
+
+	.state('app.matchSlot', {
+		url: 'app/matchslot/:matchId',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/matchslot.html',
+				controller: 'MatchSlot',
+			},
+		},
+	})
+
+	.state('app.matchChat', {
+		url: 'app/matchchat/:matchId',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/matchChat.html',
+				controller: 'MatchChat',
+			},
+		},
+	})
+	.state('app.sportMatch', {
+		url: 'app/sportmatch/:sportId',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/sportmatch.html',
+				controller: 'SportMatch',
+			},
+		},
+	})
+
+	.state('app.inviteFriend', {
+		url: 'app/friends',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/friends.html',
+				controller: 'InviteFriend',
+				resolve: {
+					resource: function(apiUrl, $window, $http, LoaderService){
+						LoaderService.Show();
+						var apiToken = $window.localStorage.getItem("api_token");
+						return $http.get(apiUrl + "/api/v1/friends?api_token=" + apiToken + "&page=1", { headers: { 'Content-Type': "application/json", }, }).then(function(res){
+							return res;
+						}, function(err){
+							return err;
+						});
+					},
+				},
+			},
+		},
+	})
+
+	.state('app.chatFriend', {
+		url: 'app/friend/:friendId',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/friendchat.html',
+				controller: 'FriendChat',
+				resolve: {
+					resource: function(apiUrl, $window, $stateParams, $http, LoaderService){
+						LoaderService.Show();
+						var friendId = $stateParams.friendId, apiToken = $window.localStorage.getItem("api_token");
+						return $http.get(apiUrl + "/api/v1/friends/chat/" + friendId + "?api_token=" + apiToken, { headers: { 'Content-Type': "application/json", }, }).then(function(res){
+							return res;
+						}, function(err){
+							return err;
+						});
+					},
+				},
+			},
+		},
+	})
+
+	.state('app.chat', {
+		url: 'app/chat',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/chat.html',
+				controller: 'Chat',
+			},
+		},
+	})
+	.state('app.reglages', {
+		url: 'app/reglages',
+		cache: false,
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/reglages.html',
+				controller: 'Reglages',
+			},
+		},
+	})
+
+
+	.state('login', {
+		cache: false,
+		url: "/myloginpage",
+		templateUrl: "templates/mylogin.html",
+		controller:"Login",
+	})
+	// if none of the above states are matched, use this as the fallback
+	$urlRouterProvider.otherwise("/myloginpage");
+});

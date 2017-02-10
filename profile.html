@@ -1,0 +1,56 @@
+<ion-view view-title="Profil">
+	<ion-nav-buttons side="right">
+		<label for="submit-form" id="submitIcon"><i class="icon ion-android-done"></i></label>
+	</ion-nav-buttons>
+	<ion-content overflow-scroll="false" class="has-header has-footer">
+		<div class="new-userFormPart">
+			<div class="row">
+				<div class="col col-100 text-center">
+					<img ng-src="{{currentUser.image ? ImageUrl(currentUser.image) : 'img/profile.png'}}" class="ed-profile" ng-click="openPhotoLibrary()">
+					<p>{{currentUser.email}}</p>
+					<p class="edit-date">Compte créé le {{formatDate(currentUser.created_at) |  date:'MM/dd/yyyy' }}</p>
+				</div>
+			</div>
+			<form name="profileForm" ng-submit="Update(profileForm, currentUser)" novalidate>
+				<div class="row">
+					<div class="col col-50">Nom</div>
+					<div class="col col-50">
+						<input type="text" ng-required="true" ng-model="currentUser.first_name" name="first_name" autocapitalize="none" autocorrect="off" placeholder="Nom">
+						<div ng-show="profileForm.first_name.$invalid && profileForm.$submitted" class="error-text" role="alert"><i class="icon ion-alert-circled error"></i></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col col-50">Prénom</div>
+					<div class="col col-50">
+						<input type="text" ng-required="true" ng-model="currentUser.last_name" name="last_name" autocapitalize="none" autocorrect="off" placeholder="Prénom">
+						<div ng-show="profileForm.last_name.$invalid && profileForm.$submitted" class="error-text" role="alert"><i class="icon ion-alert-circled error"></i></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col col-50">Date de naissance</div>
+					<div class="col col-50">
+						<input type="text" ng-focus="openDatePicker()" name="birthdate" ng-required="true" ng-model="currentUser.birthdate" autocapitalize="none" autocorrect="off" placeholder="dd/mm/aaaa" ng-readonly="true">
+						<div ng-show="profileForm.birthdate.$invalid && profileForm.$submitted" class="error-text" role="alert"><i class="icon ion-alert-circled error"></i></div>
+					</div>
+				</div>
+				<div class="row sex">
+					<div class="col col-50">Sexe</div>
+					<div class="col col-50">
+						<div id="sex" modal-select="" ng-model="currentUser.gender" options="genders" hide-reset="true" modal-title="Select Sexe" option-property="key" option-getter="getOption(option)">{{ currentUser.gender ? (currentUser.gender == 'male' ? 'Homme' : 'Femme') : 'Select Sexe'}}<div class="option">{{option.value}}</div></div>
+						<div ng-show="profileForm.gender.$invalid && profileForm.$submitted" class="error-text" role="alert"><i class="icon ion-alert-circled error"></i></div>
+					</div>
+				</div>
+
+				<div class="row post">
+					<div class="col col-50">Poste</div>
+					<div class="col col-50">
+						<div id="post" modal-select="" ng-model="currentUser.post" options="posts" hide-reset="true" modal-title="Select Poste" option-property="key" option-getter="getOption(option)">{{post}}<div class="option">{{option.value}}</div></div>
+						<div ng-show="profileForm.post.$invalid && profileForm.$submitted" class="error-text" role="alert"><i class="icon ion-alert-circled error"></i></div>
+					</div>
+				</div>
+				<input type="submit" id="submit-form" class="hidden" ng-hide="true" />
+			</form>
+		</div>
+          </ion-content>
+	<div ng-include src="'templates/tabs.html'"></div>
+</ion-view>

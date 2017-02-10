@@ -1,0 +1,120 @@
+
+
+
+
+
+ <ion-view view-title="Show Auth" class="scroll-content registerPage">
+ 	<ion-content overflow-scroll="false" class="showAuthPage-1">
+ 		<div id="CreateScreen">
+			<img id="doinshowAuth" src="img/logow.png" alt="logo">
+ 			<div class="new-userFormPart">
+ 				<div class="row">
+					<div class="col">
+						<p id="doin-showAuth">Faites du sport facilement !</p>
+					</div>
+				</div>
+ 			</div>
+ 		</div>
+ 	</ion-content>
+ 	<div  class="bar bar-footer bar-light padd0">
+ 		<div class="col col-45 text-center">
+ 			<button ng-click="Register()" type="button" class="button button-clear colorBlack left8">REJOIGNEZ-NOUS</button>
+ 		</div>
+ 		<div class="col col-10 text-center">
+ 			<img src="img/line.png" class="height100">
+ 		</div>
+ 		<div class="col col-45 text-center">
+ 			<button ng-click="Login()" type="button" class="button button-clear colorBlack right8">SE CONNECTER</button>
+ 		</div>
+ 	</div>
+</ion-view>
+
+
+
+
+
+
+  <!-- <body ng-controller="MyCtrl">
+    
+    <ion-header-bar class="bar-positive">
+      <div class="buttons">
+        <button class="button button-icon icon ion-ios-minus-outline"
+          ng-click="data.showDelete = !data.showDelete; data.showReorder = false"></button>
+      </div>
+      <h1 class="title">Ionic Delete/Option Buttons</h1>
+      <div class="buttons">
+        <button class="button" ng-click="data.showDelete = false; data.showReorder = !data.showReorder">
+            Reorder
+        </button>
+      </div>
+    </ion-header-bar>
+ -->
+
+
+    <ion-header-bar class="bar-positive">
+      <h1 class="title">Ionic colle list</h1>
+
+<!-- 
+         <ion-nav-back-button class="button-clear"
+    ng-click="myGoBack()">
+    <i class="ion-arrow-left-c"></i> Back
+  </ion-nav-back-button> 
+ -->
+ <div class="buttons">
+
+        <button class="button" ng-click="myGoBack()">
+
+           Back
+
+        </button>
+      </div>
+
+    </ion-header-bar>
+
+    <ion-content>
+ <ion-list> 
+
+
+    <!--   <ion-nav-back-button class="button-clear"
+    ng-click="myGoBack()">
+    <i class="ion-arrow-left-c"></i> Back
+  </ion-nav-back-button> -->
+ 
+
+   <div ng-repeat="group in groups">
+
+
+          <ion-item class="item-stable"    ng-click="toggleGroup(group)"    ng-class= "{active: isGroupShown(group)}">
+                  
+                  
+     <div class="iconss"         <i class="icon"  side="right"   ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'">   </i> 
+
+            &nbsp;
+            asareri {{group.name}}
+
+
+          </ion-item>
+       </div>
+
+          <ion-item class="item-accordion"   ng-repeat="item in group.items"     ng-show="isGroupShown(group)">   {{item}}
+           
+                </ion-item>        
+           
+   </div>
+
+            </div>
+          </div>
+
+
+           </ion-list>
+
+    </ion-content>
+      
+  
+
+
+
+
+
+
+

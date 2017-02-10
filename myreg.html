@@ -1,0 +1,65 @@
+
+<ion-view>
+
+<ion-content>
+
+<form ng-submit="Myreg(loginf)" name="loginf" novalidate>
+
+
+<div class="list">
+
+
+  <label class="item item-input item-floating-label">
+
+    <span class="input-label">First Name</span>
+
+    <input type="text" placeholder="First Name"    name="firstname"    ng-model="logindata.firstname"   ng-required="true"   minlength="2"  maxlength="5">
+
+    <div ng-show="loginf.firstname.$invalid && loginf.$submitted" class="error-text" role="alert"><i class="icon ion-alert-circled error"></i></div>
+  </label>
+
+
+  <label class="item item-input item-floating-label">
+    <span class="input-label">Last Name</span>
+    <input type="text" placeholder="Last Name"  name="lastname"  ng-model="logindata.lastname"  ng-required="true">
+
+    <div ng-show="loginf.lastname.$invalid && loginf.$submitted" class="error-text" role="alert"><i class="icon ion-alert-circled error"></i></div>
+  </label>
+
+
+  <label class="item item-input item-floating-label">
+    <span class="input-label">Email</span>
+    <input type="email" name="email"  placeholder="Email"   ng-model="logindata.email"  ng-required="true">
+
+<div ng-show="loginf.email.$invalid && loginf.$submitted" class="error-text" role="alert">  <i class="icon ion-alert-circled error"></i>
+
+</div>  </label>
+
+  </label>
+
+
+</div>
+
+   <div class="row">
+                 <div class="col text-center">
+               <button class="button button-positive">
+                submit
+              </button>
+
+              </div>
+              </div>
+
+
+</form>
+
+<div class= "col - lg - 6">
+<h2> debug </h2>
+<pre> {{ loginf   |  json }}</pre>
+
+</div>
+
+</ion-content>
+
+
+
+</ion-view>

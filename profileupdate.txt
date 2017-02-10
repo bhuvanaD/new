@@ -1,0 +1,168 @@
+ <style type="text/css">
+..new-profile{color: #3366ff;}
+.edit-icons{position: absolute;right: 5px;width: 30px;}
+.head-img{width: 150px;margin-top:10px;}
+.four-list{padding-right: 10px ! important; margin-bottom:30px;}
+.ball-border{border: 1px solid #ddd;height: 30px;}
+.by1-img{width: 20px;}
+.pot1{font-size: 15px;margin-top: 2%;background-color: #3366ff;color: #fff;padding: 5px;text-align: center;margin-top: 3%;}
+.pot2-border{border-bottom: 1px solid #808080;}
+.img0{width: 50px;border-radius: 50%;}
+.h1t-sub{text-align: center;margin-bottom: 5px;}
+.ht2-sub{font-size: 15px;margin-top: -1vh ! important;background-color: #3366ff;color: #fff;padding: 5px;text-align: center;margin-top: 3%;}
+.pot3-border{margin-top: -10px ! important;}
+.bo1-ball{border: 1px solid #ddd;height: 30px;}
+.v1-c{width: 25px;}
+.h3t-sub{font-size: 15px;margin-top: -1vh ! important;background-color: #3366ff;color: #fff;padding: 5px;text-align: center;margin-top: 3%;}
+.img-bgchange{
+  background-image: url('../img/bg-images.png');
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  min-height:  160px;
+  margin: 4%;
+  z-index: -100;
+}
+.share-img{position: absolute;right: 5px;width: 30px;margin-top: -10px;}
+.profile-upda{margin-top: 7% ! important;} 
+.profilemo1{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pp1{font-size:12px;}
+.statise-hr{border:3px solid #3366ff; width:30px;}
+.statise-hr1{border:3px solid #99cc00; width:30px;}
+.statise-hr2{border:3px solid #ff9900; width:30px;}
+.statise-hr3{border:3px solid #ff0000; width:30px;}
+ </style>
+
+
+
+
+ 
+ <ion-view> 
+
+  
+    <ion-content overflow-scroll="false" class="has-header has-subheader has-footer">
+
+        <div class="row">
+            <div class="col col-40 text-center">
+              <div class="img-border  profile-border">
+                <ion-thumbnail item-left>
+
+                <img src="img/profile-pic.png" class="profile-pic">
+
+                </ion-thumbnail>
+                
+                </div>
+                <p class="new-profile">Adrian Mannarino</p>
+            </div> 
+            <div class="col col-60 text-center img-left">
+                  <img src="img/edit.png" class="edit-icons">
+                  <img src="img/rating.png" class="rating-profile">
+                  <img src="img/head.png" class="head-img">
+            </div>
+        </div>
+      <div class="row four-list">
+          <div class="col col-20">
+            <P>Sample</P>
+          </div>
+          <div class="col col-20 text-center ball-border">
+            <img src="img/ball.png" class="by1-img">
+          </div>
+           <div class="col col-20 text-center ball-border">
+            <img src="img/cball.png" class="by1-img">
+          </div>
+           <div class="col col-20 text-center ball-border">
+            <img src="img/rocket.png" class="by1-img">
+          </div>
+           <div class="col col-20 text-center ball-border">
+            <img src="img/rocket.png" class="by1-img">
+          </div>
+      </div>
+      <p class="pot1">Sample-text</p>
+      <div class="row pot2-border">
+         <div class="col col-20 text-center">
+              <img src="img/perry.png" class="img0"> 
+          <p>Name</p> 
+          </div>
+           <div class="col col-20 text-center">
+              <img src="img/perry.png" class="img0"> 
+          <p>Name</p> 
+          </div>
+           <div class="col col-20 text-center">
+              <img src="img/perry.png" class="img0"> 
+          <p>Name</p> 
+          </div>
+           <div class="col col-20 text-center">
+              <img src="img/perry.png" class="img0"> 
+          <p>Name</p> 
+          </div>
+           <div class="col col-20 text-center">
+              <img src="img/perry.png" class="img0"> 
+          <p>Name</p> 
+          </div>
+           <div class="col col-20 text-center">
+              <img src="img/perry.png" class="img0"> 
+          <p>Name</p> 
+          </div>
+       </div>
+       <p class="h1t-sub">sub-sample</p>
+       <p class="ht2-sub">Sample-text</p>
+       <div class="row pot3-border">
+          <div class="col col-33 text-center bo1-ball">
+              <img src="img/ball.png" class="v1-c">
+          </div>
+           <div class="col col-33 text-center bo1-ball">
+              <img src="img/cball.png" class="v1-c">
+          </div>
+           <div class="col col-33 text-center bo1-ball">
+              <img src="img/rocket.png" class="v1-c">
+          </div> 
+       </div>
+        <div class="row bo1-bottom">
+          <div class="col col-100 img-bgchange">
+              <div class="list">
+              <a class="item item-avatar" href="#" class="img-item">
+              <img src="img/perry.png" class="lapres-img">
+              <h2 class="la-text1">Venkman</h2>
+              <p class="la-text2" >Sample</p>
+              <p class="la-text3">Sample</p>
+              </a>
+              </div>
+              <p class="lapres-foot">FootFootFoot</p>
+          </div>
+      </div> 
+     <p class="h3t-sub">Sample-text</p>
+      <div class="row">
+            <div class="col col-100">
+                <img src="img/share.png" class="share-img">
+            </div>    
+      </div>
+        <div class="row statistiques profile-upda">
+          <div class="col col-25 text-center">
+              <p class="statisque">19</p>
+              <p>sample</p>
+              <hr class="statise-hr">
+          </div>
+           <div class="col col-25 text-center">
+              <p class="statisque">18</p>
+              <p>sample</p>
+              <hr class="statise-hr1">
+          </div>
+           <div class="col col-25 text-center">
+              <p class="statisque">1</p>
+              <p>sample</p>
+              <hr class="statise-hr2">
+          </div>
+           <div class="col col-25 text-center">
+              <p class="statisque">1</p>
+              <p>sample</p>
+              <hr class="statise-hr3">
+          </div>
+          </div>
+   </ion-content>
+<div ng-include src="'templates/tabs.html'"></div>
+   
+</ion-view> 
